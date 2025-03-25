@@ -1,7 +1,7 @@
 {
-    "from": "jrafah2002@gmail.com",
-    "to": "jrafah2002@gmail.com",
-    "password": "abpo dvkh nsxg yeda",
+    "from": "<Email_From>",
+    "to": "<Email_From>",
+    "password": "<Email_Password>",
     "gmail_server": "smtp.gmail.com",
     "gmail_port": 587
 }
