@@ -20,13 +20,15 @@ The repository is structured as follows:
   - **insert_patches_in_database.py**: Insert the patches from new and updated CVES in the database
 
 ## How to Use
-
 To use the scripts it is necessary to configure all the basic information in the following files:
 1- */src/emails/config/config.json*
 2- */src/modules/config/dynamic_config_template.json*
 3- */src/modules/config/static_config.json* 
 These files have the paths for each repository, the IDs of each project on the website, the information for connecting to the database, and the information needed for sending the notification, etc.
 
+## Additional notes 
+
+  
 After every configuration, the next order must be followed:
 1- **collect_vulnerabilities**
 2- **diff_CVE_automatization.py**
