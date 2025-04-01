@@ -32,13 +32,13 @@
 		"django": true
 	},
 	
-	"output_directory_path": "/media/sda1/Projeto_Vulnerabilidades/VulnerabilidadesWork/output/",
-	"output_directory_diff_path": "/media/sda1/Projeto_Vulnerabilidades/VulnerabilidadesWork/output/diff_between_files",
+	"output_directory_path": "C:/Users/ramya/Documents/university/2 ano/Database project/CVEDetailsScrape/Output",
+	"output_directory_diff_path": "C:/Users/ramya/Documents/university/2 ano/Database project/CVEDetailsScrape/Output/diff_between_files",
 	"start_at_cve_hub_page": null,
 	"scrape_all_branches": false,
 
 	"affected_files_csv_write_frequency": 10,
-	"neutral_after_author_date": "<YYYY-MM-DD>",
+	"neutral_after_author_date": "<YYYY-MM-DD>",	
 	"neutral_before_author_date": "<YYYY-MM-DD>",
 
 	"start_at_timeline_index": null,
@@ -46,7 +46,7 @@
 	"start_at_checkout_commit_index": null,
 	"checkout_commit_index_list": null,
 
-	"clang_lib_path": "/usr/lib/x86_64-linux-gnu/libclang-10.so.1",
+	"clang_lib_path": "C:/Program Files/LLVM/lib/libclang.lib",
 
 	"dataset_path": "<Replace with path>",
 
@@ -183,74 +183,10 @@
 	{
 		"Glibc":
 		{
-			"repository_path": "/media/sda1/Projeto_Vulnerabilidades/Repositorios/glibc/"
-		},
-
-		"Apache HTTP Server":
-		{
-			"repository_path": "/media/sda1/Projeto_Vulnerabilidades/Repositorios/httpd/"
-		},
-
-		"Xen":
-		{
-			"repository_path": "/media/sda1/Projeto_Vulnerabilidades/Repositorios/xen/"
-		},
-
-		"Linux Kernel":
-		{
-			"repository_path": "/media/sda1/Projeto_Vulnerabilidades/Repositorios/linux/"
-		},
-
-		"Mozilla":
-		{
-			"repository_path": "/media/sda1/Projeto_Vulnerabilidades/Repositorios/gecko-dev/"
-		},
-
-		"MongoDB":
-		{
-			"repository_path": "/media/sda1/Projeto_Vulnerabilidades/Repositorios/mongo/"
-		},
-
-		"MySQL":
-		{
-			"repository_path": "/media/sda1/Projeto_Vulnerabilidades/Repositorios/mysql-server/"
-		},
-
-		"PostgreSQL":
-		{
-			"repository_path": "/media/sda1/Projeto_Vulnerabilidades/Repositorios/postgres/"
-		},
-
-		"Elastic":
-		{
-			"repository_path": "/media/sda1/Projeto_Vulnerabilidades/Repositorios/elasticsearch/"
-		},
-
-		"Redis":
-		{
-			"repository_path": "/media/sda1/Projeto_Vulnerabilidades/Repositorios/redis/"
-		},
-
-		"Apache Cassandra":
-		{
-			"repository_path": "/media/sda1/Projeto_Vulnerabilidades/Repositorios/cassandra/"
-		},
-
-		"SQLite":
-		{
-			"repository_path": "/media/sda1/Projeto_Vulnerabilidades/Repositorios/sqlite/"
-		},
-
-		"Neo4j":
-		{
-			"repository_path": "/media/sda1/Projeto_Vulnerabilidades/Repositorios/neo4j/"
-		},
-
-		"Djangoproject":
-		{
-			"repository_path": "/media/sda1/Projeto_Vulnerabilidades/Repositorios/django/"
+			"repository_path": "C:/Users/ramya/Documents/university/SD project/Glibc project/glibc/"
 		}
 	},
+	
 
 	"sats":
 	{
