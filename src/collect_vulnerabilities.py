@@ -16,6 +16,7 @@ from modules.common import log
 from modules.project import Project
 from emails.send_email import Email
 
+
 ####################################################################################################
 def send_notification(proj: str) -> None:
     '''

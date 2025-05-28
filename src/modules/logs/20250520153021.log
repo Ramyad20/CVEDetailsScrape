@@ -1,0 +1,3 @@
+[2025-05-20 16:30:21] [INFO] [common.py:76] <module>: Initializing the common module.
+[2025-05-20 16:30:24] [INFO] [project.py:35] <module>: Loading libclang from "C:/Program Files/LLVM/lib/libclang.lib".
+[2025-05-20 16:30:24] [ERROR] [project.py:47] <module>: Failed to load libclang with the error: LibclangError('[WinError 193] %1 is not a valid Win32 application. To provide a path to libclang use Config.set_library_path() or Config.set_library_file().')
