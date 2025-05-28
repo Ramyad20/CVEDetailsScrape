@@ -88,6 +88,7 @@ class Project:
 		self.output_directory_path = os.path.abspath(self.output_directory_path)
 
 		try:
+			self.repository_path = "C:/Users/ramya/Documents/university/2 ano/Database project/Glibc/glibc"
 			self.repository = git.Repo(self.repository_path)
 			log.info(f'Loaded the project "{self}" located in "{self.repository_path}".')
 		except Exception as error:
