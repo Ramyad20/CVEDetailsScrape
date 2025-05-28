@@ -17,19 +17,19 @@
 	"allowed_projects":
 	{
 		"glibc": true,
-		"apache": true,
-		"xen": true,
-		"kernel": true,
-		"mozilla": true,
-		"mongodb": true,
-		"mysql": true,
-		"postgresql": true,
-		"elastic": true,
-		"redis": true,
-		"apache_cassandra": true,
-		"sqlite": true,
-		"neo4j": true,
-		"django": true
+		"apache": false,
+		"xen": false,
+		"kernel": false,
+		"mozilla": false,
+		"mongodb": false,
+		"mysql": false,
+		"postgresql": false,
+		"elastic": false,
+		"redis": false,
+		"apache_cassandra": false,
+		"sqlite": false,
+		"neo4j": false,
+		"django": false
 	},
 	
 	"output_directory_path": "C:/Users/ramya/Documents/university/2 ano/Database project/CVEDetailsScrape/Output",
@@ -173,7 +173,7 @@
 
 			{
 				"name": "Best F-Score (Multiclass)", "target_label": "grouped_multiclass_label",
-				"dimensionality_reduction": ["variance"], "data_balancing": ["RandomOverSampler"], 
+				"dimensionality_reduction": ["variance"], "dastta_balancing": ["RandomOverSampler"], 
 				"classification_algorithm": "xgboost", "algorithm_parameters": {"gamma": 0, "learning_rate": 0.3, "max_depth": 30, "min_samples_leaf": 4, "min_samples_split": 5, "n_estimators": 300, "subsample": 1}
 			}
 		]
@@ -181,9 +181,10 @@
 
 	"projects":
 	{
-		"Glibc":
+		"glibc":
 		{
-			"repository_path": "C:/Users/ramya/Documents/university/SD project/Glibc project/glibc/"
+			"repository_path": "C:/Users/ramya/Documents/university/2 ano/Database project/Glibc/glibc"
+
 		}
 	},
 	
