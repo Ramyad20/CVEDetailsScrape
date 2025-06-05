@@ -38,7 +38,7 @@ try:
 		clang.cindex.Config.set_library_path(clang_lib_path)
 		CLANG_INDEX = clang.cindex.Index.create()
 	except Exception as error:
-		clang.cindex.Config.set_library_file(clang_lib_path)
+		clang.cindex.Config.set_library_path(clang_lib_path)
 		CLANG_INDEX = clang.cindex.Index.create()
 
 	log.info(f'Loaded libclang successfully.')
