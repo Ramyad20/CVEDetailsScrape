@@ -1,0 +1,23 @@
+[2025-06-25 12:29:20] [INFO] [common.py:76] <module>: Initializing the common module.
+[2025-06-25 12:29:21] [INFO] [project.py:35] <module>: Loading libclang from "C:\Program Files\LLVM\bin\libclang.dll".
+[2025-06-25 12:29:21] [ERROR] [project.py:47] <module>: Failed to load libclang with the error: LibclangError("function 'clang_CXXMethod_isExplicit' not found. Please ensure that your python bindings are compatible with your libclang.so version.")
+[2025-06-25 12:29:22] [INFO] [project.py:132] get_project_list_from_config: Loading the project "Glibc" (glibc) with the following configurations: {'short_name': 'glibc', 'database_id': 5, 'database_name': 'glibc', 'github_data_name': 'glibc', 'vendor_id': [72], 'product_id': [767], 'url_pattern': 'sourceware', 'master_branch': 'master', 'language': 'c', 'include_directory_path': 'include', 'repository_path': 'H:/Documents/my things/University/2 ano/glibc', 'output_directory_path': 'H:/Documents/my things/University/2 ano/CVEDetailsScrape/ouput folder', 'scrape_all_branches': False, 'output_directory_diff_path': 'C:/Users/ramya/Documents/university/2 ano/Database project/CVEDetailsScrape/Output/diff_between_files'}
+[2025-06-25 12:29:22] [ERROR] [project.py:96] __init__: Failed to get the repository for the project "Glibc"" with the error: NoSuchPathError('C:\\Users\\ramya\\Documents\\university\\2 ano\\Database project\\Glibc\\glibc')
+[2025-06-25 12:29:22] [INFO] [project.py:124] get_project_list_from_config: Ignoring the project "Apache HTTP Server" (apache).
+[2025-06-25 12:29:22] [INFO] [project.py:124] get_project_list_from_config: Ignoring the project "Xen" (xen).
+[2025-06-25 12:29:22] [INFO] [project.py:124] get_project_list_from_config: Ignoring the project "Linux Kernel" (kernel).
+[2025-06-25 12:29:22] [INFO] [project.py:124] get_project_list_from_config: Ignoring the project "Mozilla" (mozilla).
+[2025-06-25 12:29:22] [INFO] [project.py:124] get_project_list_from_config: Ignoring the project "MongoDB" (mongodb).
+[2025-06-25 12:29:22] [INFO] [project.py:124] get_project_list_from_config: Ignoring the project "MySQL" (mysql).
+[2025-06-25 12:29:22] [INFO] [project.py:124] get_project_list_from_config: Ignoring the project "PostgreSQL" (postgresql).
+[2025-06-25 12:29:22] [INFO] [project.py:124] get_project_list_from_config: Ignoring the project "Elastic" (elastic).
+[2025-06-25 12:29:22] [INFO] [project.py:124] get_project_list_from_config: Ignoring the project "Redis" (redis).
+[2025-06-25 12:29:22] [INFO] [project.py:124] get_project_list_from_config: Ignoring the project "Apache Cassandra" (apache_cassandra).
+[2025-06-25 12:29:22] [INFO] [project.py:124] get_project_list_from_config: Ignoring the project "SQLite" (sqlite).
+[2025-06-25 12:29:22] [INFO] [project.py:124] get_project_list_from_config: Ignoring the project "Neo4j" (neo4j).
+[2025-06-25 12:29:22] [INFO] [project.py:124] get_project_list_from_config: Ignoring the project "Djangoproject" (django).
+[2025-06-25 12:29:22] [INFO] [project.py:664] scrape_vulnerabilities_from_cve_details: Collecting the vulnerabilities for the "Glibc" project (72, 767):
+[2025-06-25 12:29:23] [ERROR] [scraping.py:77] download_page: Failed to download the page "https://www.cvedetails.com/vulnerability-list.php" with the error: HTTPError('403 Client Error: Forbidden for url: https://www.cvedetails.com/vulnerability-list.php?vendor_id=72&product_id=767')
+[2025-06-25 12:29:23] [ERROR] [project.py:668] scrape_vulnerabilities_from_cve_details: Could not download the first hub page. No vulnerabilities will be scraped for this project.
+[2025-06-25 12:29:23] [INFO] [collect_vulnerabilities.py:121] main: Finished running for the project "Glibc".
+[2025-06-25 12:29:23] [INFO] [collect_vulnerabilities.py:123] main: Finished running.

@@ -46,7 +46,7 @@
 	"start_at_checkout_commit_index": null,
 	"checkout_commit_index_list": null,
 
-	"clang_lib_path": "C:\\Program Files\\LLVM\\bin",
+	"clang_lib_path": "C:\\Program Files\\LLVM\\bin\\libclang.dll",
 
 	"dataset_path": "<Replace with path>",
 
