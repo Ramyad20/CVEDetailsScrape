@@ -2,3 +2,6 @@ logs
 src\modules\config
 src/modules/logs/
 src/modules/data/
+Output/
+**/__pycache__/
+*.pyc

@@ -73,7 +73,7 @@ class ScrapingManager():
 		if self._driver is None:
 			log.info("Initializing automated browser...")
 			
-			def create_options():
+			def create_options(use_profile=True):
 				options = uc.ChromeOptions()
 				# Headless is currently incompatible with the bypass logic
 				# options.add_argument("--headless") 
@@ -84,20 +84,21 @@ class ScrapingManager():
 				# Set a very standard User-Agent to match typical browser behavior
 				options.add_argument('--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36')
 
-				# Use a unique temporary profile directory
-				from .common import CURRENT_TIMESTAMP
-				profile_dir = os.path.join(os.path.dirname(__file__), "data", f"chrome_profile_{CURRENT_TIMESTAMP}")
-				os.makedirs(profile_dir, exist_ok=True)
-				options.add_argument(f"--user-data-dir={profile_dir}")
+				if use_profile:
+					# Use a unique temporary profile directory
+					from .common import CURRENT_TIMESTAMP
+					profile_dir = os.path.join(os.path.dirname(__file__), "data", f"chrome_profile_{CURRENT_TIMESTAMP}")
+					os.makedirs(profile_dir, exist_ok=True)
+					options.add_argument(f"--user-data-dir={profile_dir}")
 				return options
 			
-			options = create_options()
 			try:
-				self._driver = uc.Chrome(options=options, version_main=147)
+				options = create_options(use_profile=True)
+				self._driver = uc.Chrome(options=options, version_main=147, use_subprocess=True)
 			except Exception as e:
-				log.error(f"Failed to initialize browser: {e}. Attempting without profile...")
-				options = create_options()
-				self._driver = uc.Chrome(options=options, version_main=147)
+				log.error(f"Failed to initialize browser with profile: {e}. Attempting without profile...")
+				options = create_options(use_profile=False)
+				self._driver = uc.Chrome(options=options, version_main=147, use_subprocess=True)
 		return self._driver
 
 	def load_cookies_from_file(self) -> bool:
