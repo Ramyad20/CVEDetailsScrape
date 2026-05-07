@@ -1,0 +1,5 @@
+2026/05/07-15:30:03.220 80dc Creating DB c:\Users\ramya\Documents\university\software vunerability project\CVEDetailsScrape\src\modules\data\chrome_profile_20260507142950\Default\Local Storage\leveldb since it was missing.
+2026/05/07-15:30:03.238 80dc Reusing MANIFEST c:\Users\ramya\Documents\university\software vunerability project\CVEDetailsScrape\src\modules\data\chrome_profile_20260507142950\Default\Local Storage\leveldb/MANIFEST-000001
+2026/05/07-15:31:03.249 1d28 Level-0 table #5: started
+2026/05/07-15:31:03.255 1d28 Level-0 table #5: 64343 bytes OK
+2026/05/07-15:31:03.258 1d28 Delete type=0 #3

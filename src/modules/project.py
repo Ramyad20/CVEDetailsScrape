@@ -73,7 +73,7 @@ class Project:
 
 	output_directory_path: str
 	scrape_all_branches: bool
- 
+
 	output_directory_diff_path: str
 
 	def __init__(self, project_name: str, project_info: dict):
@@ -88,7 +88,6 @@ class Project:
 		self.output_directory_path = os.path.abspath(self.output_directory_path)
 
 		try:
-			self.repository_path = "C:/Users/ramya/Documents/university/2 ano/Database project/Glibc/glibc"
 			self.repository = git.Repo(self.repository_path)
 			log.info(f'Loaded the project "{self}" located in "{self.repository_path}".')
 		except Exception as error:
@@ -662,6 +661,7 @@ class Project:
 			self.index_list_vendor_product += 1
 			
 			log.info(f'Collecting the vulnerabilities for the "{self}" project ({vendor_id}, {product_id}):')
+			Cve.CVE_DETAILS_SCRAPING_MANAGER.login_cve_details()
 			response = Cve.CVE_DETAILS_SCRAPING_MANAGER.download_page('https://www.cvedetails.com/vulnerability-list.php', {'vendor_id': vendor_id, 'product_id': product_id})
 			
 			if response is None:
@@ -671,13 +671,22 @@ class Project:
 			main_soup = bs4.BeautifulSoup(response.text, 'html.parser')
 		
 			page_div = main_soup.find('div', id='pagingb')
-   
-			page_a_list = page_div.find_all('a', title="List of security vulnerabilities, CVEs")
 			
-			page_url_list = ['https://www.cvedetails.com' + page_a['href'] for page_a in page_a_list]
-   
-			if len(page_url_list) == 0:
-				page_url_list.append(response.url)
+			if page_div is None:
+				log.error(f"Could not find the paging div 'pagingb'. Page title: {main_soup.title.string if main_soup.title else 'No Title'}")
+				# If we only have one page, there might not be a paging div.
+				# Let's check if we have results anyway.
+				if main_soup.find('div', id='searchresults'):
+					log.info("Found search results but no paging div. Assuming single page.")
+					page_url_list = [response.url]
+				else:
+					log.error(f"Search results not found. Page snippet: {response.text[:1000]}")
+					return
+			else:
+				page_a_list = page_div.find_all('a', title="List of security vulnerabilities, CVEs")
+				page_url_list = ['https://www.cvedetails.com' + page_a['href'] for page_a in page_a_list]
+				if len(page_url_list) == 0:
+					page_url_list.append(response.url)
 		
 			if DEBUG_ENABLED:
 				previous_len = len(page_url_list)

@@ -2,12 +2,10 @@
 	"debug":
 	{
 		"enabled": false,
-		
 		"min_hub_pages": 6,
 		"hub_page_step": 5,
 		"max_cves_per_hub_page": 5,
 		"use_random_sampling": true,
-
 		"verify_different_unit_names": true,
 		"different_unit_names_ratio_limit": 90
 	},
@@ -32,13 +30,13 @@
 		"django": false
 	},
 	
-	"output_directory_path": "H:/Documents/my things/University/2 ano/CVEDetailsScrape/ouput folder",
-	"output_directory_diff_path": "C:/Users/ramya/Documents/university/2 ano/Database project/CVEDetailsScrape/Output/diff_between_files",
+	"output_directory_path": "C:/Users/ramya/Documents/university/software vunerability project/CVEDetailsScrape/Output/",
+	"output_directory_diff_path": "C:\\Users\\ramya\\Documents\\university\\software vunerability project\\CVEDetailsScrape\\Output\\diff_between_files\\",
 	"start_at_cve_hub_page": null,
 	"scrape_all_branches": false,
 
 	"affected_files_csv_write_frequency": 10,
-	"neutral_after_author_date": "<YYYY-MM-DD>",	
+	"neutral_after_author_date": "<YYYY-MM-DD>",
 	"neutral_before_author_date": "<YYYY-MM-DD>",
 
 	"start_at_timeline_index": null,
@@ -72,8 +70,8 @@
 	"dataset_filter_samples_ineligible_for_alerts": true,
 	"dataset_filter_commits_without_alerts": true,
 
-	"account_username": "<Username>",
-	"account_password": "<Password>",
+	"account_username": "uc2023205631@student.uc.pt",
+	"account_password": "Vunerability1234@",
 
 	"propheticus":
 	{
@@ -149,13 +147,13 @@
 			
 			{
 				"name": "Best Recall (Binary) - Default", "target_label": "binary_label",
-				"dimensionality_reduction": ["variance"], "data_balancing": ["RandomUnderSampler"], 
+				"dimensionality_reduction": ["variance"], "data_balancing": ["RandomUnderSampler"],
 				"classification_algorithm": "random_forests", "algorithm_parameters": {"bootstrap": true, "criterion": "gini", "max_features": "auto", "min_samples_leaf": 1, "min_samples_split": 2, "n_estimators": 100}
 			},
 
 			{
 				"name": "Best F-Score (Binary)", "target_label": "binary_label",
-				"dimensionality_reduction": ["variance"], "data_balancing": ["RandomOverSampler"], 
+				"dimensionality_reduction": ["variance"], "data_balancing": ["RandomOverSampler"],
 				"classification_algorithm": "random_forests", "algorithm_parameters": {"bootstrap": true, "criterion": "gini", "max_features": null, "min_samples_leaf": 1, "min_samples_split": 2, "n_estimators": 100}
 			},
 
@@ -167,13 +165,13 @@
 			
 			{
 				"name": "Best Recall (Multiclass) - Default", "target_label": "grouped_multiclass_label",
-				"dimensionality_reduction": ["variance"], "data_balancing": ["RandomUnderSampler"], 
+				"dimensionality_reduction": ["variance"], "data_balancing": ["RandomUnderSampler"],
 				"classification_algorithm": "random_forests", "algorithm_parameters": {"bootstrap": true, "criterion": "gini", "max_features": "auto", "min_samples_leaf": 1, "min_samples_split": 2, "n_estimators": 100}
 			},
 
 			{
 				"name": "Best F-Score (Multiclass)", "target_label": "grouped_multiclass_label",
-				"dimensionality_reduction": ["variance"], "data_balancing": ["RandomOverSampler"], 
+				"dimensionality_reduction": ["variance"], "data_balancing": ["RandomOverSampler"],
 				"classification_algorithm": "xgboost", "algorithm_parameters": {"gamma": 0, "learning_rate": 0.3, "max_depth": 30, "min_samples_leaf": 4, "min_samples_split": 5, "n_estimators": 300, "subsample": 1}
 			}
 		]
@@ -183,7 +181,7 @@
 	{
 		"Glibc":
 		{
-			"repository_path": "H:/Documents/my things/University/2 ano/glibc"
+			"repository_path": "C:\\Users\\ramya\\Documents\\university\\software vunerability project\\Glibc\\glibc"
 		}
 	},
 	
