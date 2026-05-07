@@ -23,7 +23,7 @@ def send_notification(proj: str) -> None:
 		Sends a notification to email.
 	
 		Params:
-			proj(str): name of the project 
+			proj(str): name of the project
     '''
     email = Email()
     email.start()
@@ -34,11 +34,8 @@ def main(project_to_analizys: str) -> None:
 	'''
 		Function thats starts the process.
 		The collection will start for the project of the params.
-  
 		Params:
-			project_to_analizys(str): name of the project or an empty string that represents everthing except kernel and mozilla
-  	'''
-   
+			project_to_analizys(str): name of the project or an empty string that represents everthing except kernel and mozilla'''
 	# Get the information of the projects
 	project_list = Project.get_project_list_from_config()
 	Project.debug_ensure_all_project_repositories_were_loaded(project_list)
@@ -50,7 +47,7 @@ def main(project_to_analizys: str) -> None:
 			pass
 		elif project_to_analizys == "":
 			if project.short_name != 'mozilla' and project.short_name != 'kernel':
-				pass	
+				pass
 			else:
 				log.info(f'The project {project.short_name} will be skiped.')
 				continue
@@ -78,7 +75,7 @@ def main(project_to_analizys: str) -> None:
 			'Git URLs', 'Git Commit Hashes',
 			'SVN URLs', 'SVN Revision Numbers'
 		]
-  
+
 		# Create the output paths
 		project.create_output_subdirectory()
 		output_csv_path = project.get_base_output_csv_path('cve')
