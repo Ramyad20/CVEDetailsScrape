@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+#
 """
 	This module defines a class that represents a software vulnerability and that contains methods for scraping its data from the CVE Details website.
 """
@@ -452,7 +452,9 @@ class Cve:
 			""" Gets the value of the first parameter in a URL's query segment given a list of keys to check. """
 			
 			split_url = urlsplit(url)
-			params = dict(parse_qsl(split_url.query))
+			# Handle both & and ; as separators for compatibility with old Gitweb URLs
+			query = split_url.query.replace(';', '&')
+			params = dict(parse_qsl(query))
 			result = None
 			
 			for query_key in query_key_list:
@@ -528,20 +530,20 @@ class Cve:
 		def handle_git_urls(url: str) -> Optional[str]:
 			commit_hash = get_query_param(url, ['id', 'h'])
 
-			if commit_hash is None:
+			if not commit_hash:
 				split_url = urlsplit(url)
 				path_components = split_url.path.rsplit('/')
 				commit_hash = path_components[-1]
 
 			# If the hash length is less than 40, we need to refer to the repository
 			# to get the full hash.
-			if commit_hash is not None and len(commit_hash) < ScrapingRegex.GIT_COMMIT_HASH_LENGTH:
+			if commit_hash and len(commit_hash) < ScrapingRegex.GIT_COMMIT_HASH_LENGTH:
 				commit_hash = self.project.find_full_git_commit_hash(commit_hash)
 
-			if commit_hash is not None and not ScrapingRegex.GIT_COMMIT_HASH.match(commit_hash):
+			if commit_hash and not ScrapingRegex.GIT_COMMIT_HASH.match(commit_hash):
 				commit_hash = None
 			
-			if commit_hash is None:
+			if not commit_hash:
 				log.error(f'--> Could not find a valid commit hash in "{url}".')
 			
 			return commit_hash
@@ -611,9 +613,3 @@ class Cve:
 
 if __name__ == '__main__':
 	pass
-#!/usr/bin/env python3
-
-"""
-#!/usr/bin/env python3
-
-"""

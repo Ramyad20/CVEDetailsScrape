@@ -72,27 +72,32 @@ class ScrapingManager():
 		""" Returns a persistent undetected-chromedriver instance. """
 		if self._driver is None:
 			log.info("Initializing automated browser...")
-			options = uc.ChromeOptions()
-			# Headless is currently incompatible with the bypass logic
-			# options.add_argument("--headless") 
-			options.add_argument("--window-size=1920,1080")
-			options.add_argument("--no-sandbox")
-			options.add_argument("--disable-gpu")
 			
-			# Set a very standard User-Agent to match typical browser behavior
-			options.add_argument('--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36')
+			def create_options():
+				options = uc.ChromeOptions()
+				# Headless is currently incompatible with the bypass logic
+				# options.add_argument("--headless") 
+				options.add_argument("--window-size=1920,1080")
+				options.add_argument("--no-sandbox")
+				options.add_argument("--disable-gpu")
+				
+				# Set a very standard User-Agent to match typical browser behavior
+				options.add_argument('--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36')
 
-			# Use a unique temporary profile directory
-			from .common import CURRENT_TIMESTAMP
-			profile_dir = os.path.join(os.path.dirname(__file__), "data", f"chrome_profile_{CURRENT_TIMESTAMP}")
-			os.makedirs(profile_dir, exist_ok=True)
-			options.add_argument(f"--user-data-dir={profile_dir}")
+				# Use a unique temporary profile directory
+				from .common import CURRENT_TIMESTAMP
+				profile_dir = os.path.join(os.path.dirname(__file__), "data", f"chrome_profile_{CURRENT_TIMESTAMP}")
+				os.makedirs(profile_dir, exist_ok=True)
+				options.add_argument(f"--user-data-dir={profile_dir}")
+				return options
 			
+			options = create_options()
 			try:
-				self._driver = uc.Chrome(options=options, version_main=146)
+				self._driver = uc.Chrome(options=options, version_main=147)
 			except Exception as e:
 				log.error(f"Failed to initialize browser: {e}. Attempting without profile...")
-				self._driver = uc.Chrome(options=options, version_main=146)
+				options = create_options()
+				self._driver = uc.Chrome(options=options, version_main=147)
 		return self._driver
 
 	def load_cookies_from_file(self) -> bool:
