@@ -4,6 +4,12 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import os
 from datetime import datetime, timezone
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+actual_directory = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.dirname(os.path.dirname(actual_directory))
+load_dotenv(os.path.join(ROOT_DIR, '.env'))
 
 def load_config_file(filename: str) -> dict:
     actual_directory = os.path.dirname(os.path.abspath(__file__))
@@ -30,11 +36,11 @@ class Email:
         
     def start(self) -> None:
         config = load_config_file("config.json")
-        self.server = config["gmail_server"]
-        self.server_port = config["gmail_port"]
-        self.from_email = config["from"]
-        self.to_email = config["to"]
-        self.password = config["password"]
+        self.server = os.getenv("EMAIL_SERVER", config.get("gmail_server", "smtp.gmail.com"))
+        self.server_port = int(os.getenv("EMAIL_PORT", config.get("gmail_port", 587)))
+        self.from_email = os.getenv("EMAIL_FROM", config.get("from"))
+        self.to_email = os.getenv("EMAIL_TO", config.get("to"))
+        self.password = os.getenv("EMAIL_PASSWORD", config.get("password"))
     
     def send(self, subject: str, message:str) -> None:
         try:

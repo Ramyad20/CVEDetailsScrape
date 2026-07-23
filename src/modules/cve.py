@@ -451,9 +451,11 @@ class Cve:
 		def get_query_param(url: str, query_key_list: list) -> Optional[str]:
 			""" Gets the value of the first parameter in a URL's query segment given a list of keys to check. """
 			
+			from urllib.parse import unquote
 			split_url = urlsplit(url)
 			# Handle both & and ; as separators for compatibility with old Gitweb URLs
-			query = split_url.query.replace(';', '&')
+			# Unquote first to handle %3B (encoded semicolon)
+			query = unquote(split_url.query).replace(';', '&')
 			params = dict(parse_qsl(query))
 			result = None
 			

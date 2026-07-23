@@ -26,3 +26,4 @@ xlrd==1.2.0
 undetected-chromedriver
 selenium
 cloudscraper
+python-dotenv

@@ -1,6 +1,6 @@
 {
     "from": "<Email_From>",
-    "to": "<Email_From>",
+    "to": "<Email_To>",
     "password": "<Email_Password>",
     "gmail_server": "smtp.gmail.com",
     "gmail_port": 587
