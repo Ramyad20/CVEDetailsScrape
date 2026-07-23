@@ -1,7 +1,7 @@
 {
-    "from": "programmingtests54@gmail.com",
-    "to": "programmingtests54@gmail.com",
-    "password": "Ramyad@1383",
+    "from": "<Email_From>",
+    "to": "<Email_To>",
+    "password": "<Email_Password>",
     "gmail_server": "smtp.gmail.com",
     "gmail_port": 587
 }

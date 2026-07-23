@@ -70,35 +70,41 @@ class ScrapingManager():
 
 	def _get_driver(self) -> uc.Chrome:
 		""" Returns a persistent undetected-chromedriver instance. """
+		# Check if driver exists but is dead (e.g. user closed it or session crashed)
+		if self._driver is not None:
+			try:
+				# Simple command to check if session is still alive
+				_ = self._driver.current_url
+			except Exception:
+				log.warning("Existing browser session is invalid or closed. Re-initializing...")
+				try:
+					self._driver.quit()
+				except:
+					pass
+				self._driver = None
+
 		if self._driver is None:
 			log.info("Initializing automated browser...")
 			
 			def create_options(use_profile=True):
 				options = uc.ChromeOptions()
-				# Headless is currently incompatible with the bypass logic
-				# options.add_argument("--headless") 
 				options.add_argument("--window-size=1920,1080")
 				options.add_argument("--no-sandbox")
 				options.add_argument("--disable-gpu")
 				
-				# Set a very standard User-Agent to match typical browser behavior
-				options.add_argument('--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36')
-
 				if use_profile:
-					# Use a unique temporary profile directory
-					from .common import CURRENT_TIMESTAMP
-					profile_dir = os.path.join(os.path.dirname(__file__), "data", f"chrome_profile_{CURRENT_TIMESTAMP}")
+					profile_dir = os.path.join(os.path.dirname(__file__), "data", "chrome_profile")
 					os.makedirs(profile_dir, exist_ok=True)
 					options.add_argument(f"--user-data-dir={profile_dir}")
 				return options
 			
 			try:
 				options = create_options(use_profile=True)
-				self._driver = uc.Chrome(options=options, version_main=147, use_subprocess=True)
+				self._driver = uc.Chrome(options=options, version_main=148, use_subprocess=True)
 			except Exception as e:
 				log.error(f"Failed to initialize browser with profile: {e}. Attempting without profile...")
 				options = create_options(use_profile=False)
-				self._driver = uc.Chrome(options=options, version_main=147, use_subprocess=True)
+				self._driver = uc.Chrome(options=options, version_main=148, use_subprocess=True)
 		return self._driver
 
 	def load_cookies_from_file(self) -> bool:
@@ -166,31 +172,104 @@ class ScrapingManager():
 		try:
 			log.info("Performing automated login fallback...")
 			driver.get("https://www.cvedetails.com")
-			time.sleep(10)
+			time.sleep(5)
 			
 			if "Sign Out" in driver.page_source or "My Account" in driver.page_source:
 				log.info("Already logged in.")
 				self.is_logged_in = True
 				return
 
-			login_url = "https://platform.securityscorecard.io/#/external/oauth?client_id=cve-details&redirect_uri=https%3A%2F%2Fwww.cvedetails.com%2Fsign-in%2Fcallback&state=8e6910e1ba3f7c2da5bafa5840dd0b97956c24a8&scope=openid&response_type=code"
-			driver.get(login_url)
+			# Find and click the Log In button dynamically
+			log.info("Searching for login link...")
+			found_link = False
+			for text in ["Log In", "Log in", "Login", "Sign In", "Sign in", "Signin"]:
+				try:
+					login_link = driver.find_element(By.PARTIAL_LINK_TEXT, text)
+					login_link.click()
+					found_link = True
+					log.info(f"Clicked login link with text: '{text}'")
+					break
+				except:
+					continue
+			
+			if not found_link:
+				log.warning("Could not find standard login link. Searching for SSO links...")
+				try:
+					links = driver.find_elements(By.TAG_NAME, "a")
+					for link in links:
+						href = link.get_attribute("href")
+						if href and "securityscorecard.io" in href:
+							link.click()
+							found_link = True
+							log.info("Clicked SSO login link.")
+							break
+				except:
+					pass
+			
+			if not found_link:
+				log.error("Could not find any login link on the page.")
+				log.warning("PLEASE MANUALLY NAVIGATE TO THE LOGIN PAGE IN THE BROWSER.")
+				log.warning("Once you see the email/password fields, press ENTER here...")
+				input("Press Enter to continue...")
+
 			time.sleep(10)
 			
+			# Handle the agreement checkbox and initial Sign In button if present
 			try:
-				email_input = driver.find_element(By.CSS_SELECTOR, "input[type='email'], input[name='email'], input[name='username']")
+				# Look for the agreement checkbox
+				checkboxes = driver.find_elements(By.CSS_SELECTOR, "input[type='checkbox']")
+				for cb in checkboxes:
+					# Check if the checkbox is near terms of use text
+					parent_text = cb.find_element(By.XPATH, "..").get_attribute("innerText")
+					if "I agree" in parent_text or "Terms of Use" in parent_text:
+						if not cb.is_selected():
+							driver.execute_script("arguments[0].click();", cb)
+							log.info("Clicked terms agreement checkbox.")
+						break
+				
+				# Look for the Sign In button that proceeds to SSO
+				sign_in_buttons = driver.find_elements(By.CSS_SELECTOR, "a[href*='sign-in'], button")
+				for btn in sign_in_buttons:
+					if "Sign In" in btn.get_attribute("innerText") or "Sign in" in btn.get_attribute("innerText"):
+						driver.execute_script("arguments[0].click();", btn)
+						log.info("Clicked initial Sign In button.")
+						time.sleep(10)
+						break
+			except Exception as e:
+				log.debug(f"Agreement step skipped or failed: {e}")
+
+			try:
+				# Check if we are at the SecurityScorecard login page
+				email_input = WebDriverWait(driver, 20).until(
+					EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='email'], input[name='email'], input[name='username']"))
+				)
 				email_input.send_keys(username)
 				password_input = driver.find_element(By.CSS_SELECTOR, "input[type='password']")
 				password_input.send_keys(password)
 				time.sleep(1)
 				login_button = driver.find_element(By.CSS_SELECTOR, "button[type='submit'], .btn-primary, button.login-button")
 				login_button.click()
-				time.sleep(20) 
-			except Exception:
-				pass
+				
+				# Wait for redirect back to cvedetails
+				log.info("Waiting for login to complete and redirect...")
+				for _ in range(12):
+					time.sleep(5)
+					if "cvedetails.com" in driver.current_url and ("Sign Out" in driver.page_source or "My Account" in driver.page_source):
+						log.info("Login successful!")
+						self.is_logged_in = True
+						return
+				
+				log.warning("Login redirect timed out. Checking current state...")
+			except Exception as e:
+				log.error(f"Failed during automated credential entry: {e}")
 			
-			self.is_logged_in = True
-			log.info("Automated login process completed.")
+			# Semi-automated fallback
+			if not self.is_logged_in:
+				log.warning("PLEASE MANUALLY LOGIN OR SOLVE CHALLENGES IN THE BROWSER WINDOW.")
+				log.warning("Once you are logged in and see the 'Sign Out' button, press ENTER here to continue...")
+				input("Press Enter to continue...")
+				if "Sign Out" in driver.page_source or "My Account" in driver.page_source:
+					self.is_logged_in = True
 			
 		except Exception as e:
 			log.error(f"An error occurred during automated login: {e}")
@@ -219,8 +298,9 @@ class ScrapingManager():
 			
 			# If challenge detected, wait longer for cookies to kick in
 			if "Attention Required! | Cloudflare" in driver.title or "Just a moment..." in driver.title:
-				log.warning("Cloudflare challenge detected. Waiting up to 60 seconds for cookie verification...")
-				for _ in range(12):
+				log.warning("Cloudflare challenge detected! Please solve it in the browser window.")
+				log.warning("Waiting up to 120 seconds for manual interaction...")
+				for _ in range(24): # Increased from 12 to 24 (120 seconds)
 					time.sleep(5)
 					if "Attention Required!" not in driver.title and "Just a moment..." not in driver.title:
 						log.info("Cloudflare challenge bypassed successfully.")

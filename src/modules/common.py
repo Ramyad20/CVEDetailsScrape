@@ -19,10 +19,15 @@ from datetime import datetime, timezone
 from typing import Any, List, Optional, Union
 
 import pandas as pd # type: ignore
+from dotenv import load_dotenv
 
 ####################################################################################################
 
 PACKAGE_DIRECTORY_PATH = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.dirname(os.path.dirname(PACKAGE_DIRECTORY_PATH))
+
+# Load environment variables from .env file
+load_dotenv(os.path.join(ROOT_DIR, '.env'))
 
 def get_path_in_data_directory(short_file_path: str) -> str:
 	""" Gets the absolute path of a file inside the data directory relative to this script. """
@@ -113,7 +118,21 @@ def load_global_config() -> dict:
 
 		return result
 
-	return merge_dictionaries(static_config, dynamic_config)
+	config = merge_dictionaries(static_config, dynamic_config)
+
+	# Override with environment variables if available
+	if os.getenv('CVEDETAILS_USERNAME'):
+		config['account_username'] = os.getenv('CVEDETAILS_USERNAME')
+	if os.getenv('CVEDETAILS_PASSWORD'):
+		config['account_password'] = os.getenv('CVEDETAILS_PASSWORD')
+	
+	if 'database' in config:
+		if os.getenv('DB_USER'):
+			config['database']['user'] = os.getenv('DB_USER')
+		if os.getenv('DB_PASSWORD'):
+			config['database']['password'] = os.getenv('DB_PASSWORD')
+
+	return config
 
 ####################################################################################################
 
