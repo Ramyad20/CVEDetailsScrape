@@ -11,7 +11,7 @@ def test_cve_login():
     options = uc.ChromeOptions()
     options.add_argument("--window-size=1280,1024")
     
-    driver = uc.Chrome(options=options, version_main=145)
+    driver = uc.Chrome(options=options)
     
     try:
         login_url = "https://platform.securityscorecard.io/#/external/oauth?client_id=cve-details&redirect_uri=https%3A%2F%2Fwww.cvedetails.com%2Fsign-in%2Fcallback&state=8e6910e1ba3f7c2da5bafa5840dd0b97956c24a8&scope=openid&response_type=code"
