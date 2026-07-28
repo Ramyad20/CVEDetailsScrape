@@ -19,9 +19,70 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 
-from .common import log, GLOBAL_CONFIG
+try:
+	from .common import log, GLOBAL_CONFIG
+except ImportError:
+	from common import log, GLOBAL_CONFIG
 
 ####################################################################################################
+
+# Patch uc.Chrome.__del__ and quit to gracefully ignore WinError 6 (invalid handle) on Windows exit
+_orig_uc_del = uc.Chrome.__del__
+def _safe_uc_del(self):
+	try:
+		_orig_uc_del(self)
+	except Exception:
+		pass
+uc.Chrome.__del__ = _safe_uc_del
+
+_orig_uc_quit = uc.Chrome.quit
+def _safe_uc_quit(self):
+	try:
+		_orig_uc_quit(self)
+	except Exception:
+		pass
+uc.Chrome.quit = _safe_uc_quit
+
+
+def detect_chrome_version_main() -> Optional[int]:
+	""" Detects the installed Google Chrome major version on Windows. """
+	try:
+		import winreg
+		for root_key in (winreg.HKEY_CURRENT_USER, winreg.HKEY_LOCAL_MACHINE):
+			for subkey in (
+				r"Software\Google\Chrome\BLBeacon",
+				r"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Google Chrome",
+				r"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Google Chrome"
+			):
+				try:
+					key = winreg.OpenKey(root_key, subkey)
+					ver, _ = winreg.QueryValueEx(key, "version")
+					winreg.CloseKey(key)
+					if ver:
+						return int(str(ver).split('.')[0])
+				except Exception:
+					pass
+	except Exception:
+		pass
+	return None
+
+
+def purge_stale_chromedriver_cache():
+	""" Purges stale chromedriver executables cached by undetected-chromedriver on Windows. """
+	cache_dirs = [
+		os.path.join(os.environ.get('APPDATA', ''), 'undetected_chromedriver'),
+		os.path.join(os.environ.get('LOCALAPPDATA', ''), 'undetected_chromedriver'),
+		os.path.join(os.path.expanduser('~'), '.local', 'share', 'undetected_chromedriver'),
+	]
+	for d in cache_dirs:
+		if os.path.exists(d):
+			try:
+				import shutil
+				shutil.rmtree(d, ignore_errors=True)
+				log.info(f"Purged stale ChromeDriver cache directory: {d}")
+			except Exception as err:
+				log.warning(f"Could not purge cache directory {d}: {err}")
+
 
 class ScrapingManager():
 	""" Represents a connection to one or more websites and provides methods for downloading their pages. """
@@ -98,13 +159,36 @@ class ScrapingManager():
 					options.add_argument(f"--user-data-dir={profile_dir}")
 				return options
 			
+			chrome_ver = detect_chrome_version_main()
+			if chrome_ver:
+				log.info(f"Detected installed Chrome major version: {chrome_ver}")
+
+			kw = {'use_subprocess': True}
+			if chrome_ver:
+				kw['version_main'] = chrome_ver
+
+			# Check if custom chromedriver executable exists in data folder
+			custom_driver = os.path.join(os.path.dirname(__file__), "data", "chromedriver.exe")
+			if os.path.exists(custom_driver):
+				log.info(f"Using custom ChromeDriver binary at: {custom_driver}")
+				kw['driver_executable_path'] = custom_driver
+
 			try:
 				options = create_options(use_profile=True)
-				self._driver = uc.Chrome(options=options, version_main=148, use_subprocess=True)
+				kw['options'] = options
+				self._driver = uc.Chrome(**kw)
 			except Exception as e:
-				log.error(f"Failed to initialize browser with profile: {e}. Attempting without profile...")
+				log.error(f"Failed to initialize browser with profile: {e}. Purging stale driver cache and retrying...")
+				purge_stale_chromedriver_cache()
+				match = re.search(r"Current browser version is (\d+)\.", str(e))
+				if match:
+					fallback_ver = int(match.group(1))
+					log.info(f"Extracted Chrome major version {fallback_ver} from error message. Using version_main={fallback_ver}")
+					kw['version_main'] = fallback_ver
+
 				options = create_options(use_profile=False)
-				self._driver = uc.Chrome(options=options, version_main=148, use_subprocess=True)
+				kw['options'] = options
+				self._driver = uc.Chrome(**kw)
 		return self._driver
 
 	def load_cookies_from_file(self) -> bool:
@@ -391,5 +475,31 @@ class ScrapingRegex():
 
 ####################################################################################################
 
+def check_drivers():
+	""" Diagnostic function to verify Chrome and ChromeDriver setup. """
+	print("--- Checking Chrome & ChromeDriver Environment ---")
+	ver = detect_chrome_version_main()
+	if ver:
+		print(f"[OK] Installed Google Chrome major version detected: {ver}")
+	else:
+		print("[WARN] Could not detect Chrome version from registry automatically.")
+
+	custom_driver = os.path.join(os.path.dirname(__file__), "data", "chromedriver.exe")
+	if os.path.exists(custom_driver):
+		print(f"[OK] Found custom ChromeDriver binary at: {custom_driver}")
+	else:
+		print(f"[INFO] No custom binary at {custom_driver}. Using undetected-chromedriver auto-download.")
+
+	print("\nAttempting browser launch test...")
+	sm = ScrapingManager()
+	try:
+		driver = sm._get_driver()
+		print(f"[SUCCESS] Browser launched successfully! Page title: '{driver.title}'")
+		driver.quit()
+	except Exception as e:
+		print(f"[ERROR] Browser launch test failed: {e}")
+
+
 if __name__ == '__main__':
-	pass
+	check_drivers()
+

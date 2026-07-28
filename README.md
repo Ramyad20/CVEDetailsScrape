@@ -33,6 +33,10 @@ To ensure the pipeline functions reliably against CVEDetails anti-bot protection
 ### Overview of Recent Improvements & Fixes
 * **Scraper Modernization & Anti-Detection (`src/modules/scraping.py`)**:
   * Integrated `undetected-chromedriver` to bypass automated bot detection and Cloudflare protection on CVEDetails.
+  * Added **Dynamic Chrome Version Detection (`detect_chrome_version_main`)**: Automatically detects the local installed Google Chrome major version from Windows Registry to prevent driver/browser version mismatches.
+  * Implemented **Automatic Driver Cache Purge & Fallback (`purge_stale_chromedriver_cache`)**: Automatically clears stale ChromeDriver caches and parses error strings if a version mismatch is encountered.
+  * Added **Standalone Driver Diagnostics Command**: Run `python src/modules/scraping.py` to quickly verify Chrome and ChromeDriver setup.
+  * Added **Teardown Exception Guarding**: Gracefully ignores Windows `WinError 6` invalid handle errors during Python interpreter shutdown.
   * Added **Session Health Checks**: Automatically detects crashed or closed browser sessions and re-initializes them cleanly without crashing execution.
   * Implemented **Persistent Chrome Profiles**: Chrome session data and cookies are retained in local profile storage (`src/modules/data/chrome_profile`) to reduce redundant logins and re-verifications.
   * **Dynamic OAuth & SSO Login Flow**: Replaced rigid hardcoded login URLs with dynamic element lookup for SecurityScorecard OAuth login (detects agreement checkboxes, sign-in triggers, and credential inputs automatically).
