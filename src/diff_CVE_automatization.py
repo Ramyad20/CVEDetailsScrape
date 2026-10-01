@@ -219,7 +219,7 @@ def main(project_to_analizys: str) -> None:
     '''
         Function thats starts the process.
 		The diff will start for the project of the params.
-  
+
 		Params:
 			project_to_analizys(str): name of the project or an empty string that represents everthing except kernel and mozilla
     '''
