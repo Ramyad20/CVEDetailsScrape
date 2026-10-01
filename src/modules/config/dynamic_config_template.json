@@ -27,7 +27,8 @@
 		"apache_cassandra": false,
 		"sqlite": false,
 		"neo4j": false,
-		"django": false
+		"django": false,
+		"jenkins": true
 	},
 	
 	"output_directory_path": "C:/Users/ramya/Documents/university/software vunerability project/CVEDetailsScrape/Output/",
@@ -182,6 +183,10 @@
 		"Glibc":
 		{
 			"repository_path": "C:\\Users\\ramya\\Documents\\university\\software vunerability project\\Glibc\\glibc"
+		},
+		"Jenkins":
+		{
+			"repository_path": "C:\\Users\\ramya\\Documents\\university\\software vunerability project\\Jenkins\\jenkins"
 		}
 	},
 	

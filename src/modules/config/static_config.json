@@ -195,6 +195,20 @@
 			"master_branch": "main",
 			"language": "python",
 			"include_directory_path": null
+		},
+
+		"Jenkins":
+		{
+			"short_name": "jenkins",
+			"database_id": 17,
+			"database_name": "jenkins",
+			"github_data_name": "jenkins",
+			"vendor_id": [15865],
+			"product_id": [null],
+			"url_pattern": "jenkins|cloudbees",
+			"master_branch": "master",
+			"language": "java",
+			"include_directory_path": null
 		}
 	},
 

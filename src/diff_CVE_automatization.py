@@ -212,7 +212,7 @@ def find_differences_between_two_cve_files(file_recent: pd.DataFrame, file_oldes
         # If the line does not exist in the most recent file it is a missing CVE
         if len(cve_recent) == 0:
             cves_missing.append(cve.to_dict())
-                   
+    
     return cves_news, cves_equals, cves_missing, cves_updated
 
 def main(project_to_analizys: str) -> None:
