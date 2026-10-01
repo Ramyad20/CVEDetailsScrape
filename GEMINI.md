@@ -28,3 +28,9 @@ This project continuously collects, diffs, and catalogs software vulnerabilities
 ## 4. Git Guidelines
 * Root-level PDFs (`Bolsa.pdf`, `Dissertation.pdf`) reside outside the Git repo and should not be tracked.
 * Repository-internal documentation PDFs like `Pipeline_Restoration_Report.pdf` are explicitly ignored in `.gitignore`.
+
+## 5. Foundational Reference Materials
+* **Authoritative Domain & Architecture References**: Always use the two root-level PDF documents as the baseline technical and conceptual references for this project:
+  * **`../Dissertation.pdf`** (João Henggeler Antunes, 2021): Primary reference for the foundational methodology, Clang AST parsing, Static Analysis Tools (Flawfinder & Cppcheck), Software Metrics (SciTools Understand), and the original MySQL schema.
+  * **`../Bolsa.pdf`** (João Rafael Henriques, 2024): Primary reference for the daily automated differential pipeline (`diff_CVE_automatization.py`), database normalization (`HISTORY` audit table, CWE associations), Crontab scheduling, and VM architecture.
+* When planning architectural changes, implementing new scripts, or modifying database tables, cross-reference these documents to maintain consistency with the project's academic and engineering design.
