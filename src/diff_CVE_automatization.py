@@ -1,6 +1,6 @@
-""" 
+"""
     This script pick the two most recent csv files from collect_vulnerabilities.py for each project and divide the data in four files:
-        equal, new, updated and deleted data. 
+        equal, new, updated and deleted data.
     This process find the columns that suffer some update in the updated data.
 
     This script uses the CSV files generated after running "collect_vulnerabilities.py" to creates its own CSVs.
@@ -232,7 +232,7 @@ def main(project_to_analizys: str) -> None:
 		'CVSS Score', 'Base Severity', 'Exploitable Score', 'Impact Score', 'Source',
 
 		'Vector Type',
-  		'Confidentiality Impact', 'Integrity Impact', 'Availability Impact', 
+  		'Confidentiality Impact', 'Integrity Impact', 'Availability Impact',
     	'Access Complexity', 'Authentication', 'Access Vector',
 		'Attack Vector', 'Attack Complexity', 'Privileges Required', 'User Interaction', 'Scope',
 		'Gained Access', 'Vulnerability Types', 'CWE',
@@ -286,18 +286,18 @@ def main(project_to_analizys: str) -> None:
                     continue
             else:
                 log.info(f'The project {proj.short_name} will be skiped.')
-                continue 
+                continue
             
             log.info(f'Initialize the diff to the project {proj.short_name}')
             
             # Directories needed
             input_directory = proj.output_directory_path
-            output_diretory = proj.create_diff_subdirectory()       
+            output_diretory = proj.create_diff_subdirectory()
             
             # Finding the paths to the files
             path_recent_file, path_old_file = find_paths(input_directory)
 
-            # We need to have at least the recent file 
+            # We need to have at least the recent file
             if path_recent_file == None:
                 log.info(f"No files to compare")
                 continue
@@ -306,11 +306,10 @@ def main(project_to_analizys: str) -> None:
             
             # Read the files
             lines_recent_file = read_file(path_recent_file)
+            lines_old_file = read_file(path_old_file)
             # If there is no oldest file we simulate an empty one
             if lines_old_file is None:
                 lines_old_file = pd.DataFrame(columns = CSV_HEADER)
-            else:
-                lines_old_file = read_file(path_old_file)
             
             # Find the differences
             cves_news, cves_equals, cves_missing, cves_updated = find_differences_between_two_cve_files(lines_recent_file, lines_old_file)
@@ -328,7 +327,7 @@ def main(project_to_analizys: str) -> None:
             log.info(f"Stats from {proj}: {len(cves_updated)} updated vulnerabilities, {len(cves_news)} new vulnerabilities, {len(cves_missing)} deleted vulnerabilities and {len(cves_equals)} equal vulnerabilities.")
             log.info(f"{proj.short_name} done!")
 
-if __name__ == '__main__':    
+if __name__ == '__main__':
     if len(sys.argv) == 1:
         main("")
     else:
